@@ -93,7 +93,7 @@ export default function Preloader() {
                 animate={{ y: "0%" }}
                 transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
                 style={{
-                  backgroundImage: `linear-gradient(to top, var(--color-flare) ${count}%, rgba(138,147,160,0.22) ${count}%)`,
+                  backgroundImage: `linear-gradient(to top, var(--color-bone) ${count}%, rgba(237,241,243,0.18) ${count}%)`,
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
                   color: "transparent",
