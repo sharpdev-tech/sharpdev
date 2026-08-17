@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { MaskLines, Reveal, SectionLabel } from "./ui/Reveal";
-import { Magnetic } from "./ui/Magnetic";
+import { ArrowButton } from "./ui/Magnetic";
 import { mailto, site } from "@/lib/site";
 import ContactForm from "./ContactForm";
 
@@ -60,41 +60,40 @@ export default function Contact() {
               </p>
             </Reveal>
 
-            {/* email block */}
             <Reveal delay={0.2}>
-              <div className="mt-12">
-                <span className="label">Email us directly</span>
-                <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
-                  <Magnetic strength={0.16}>
-                    <a
-                      href={mailto()}
-                      className="group relative inline-block text-[clamp(1.5rem,4.4vw,3.1rem)] font-medium tracking-[-0.045em]"
-                    >
-                      <span className="relative z-10">{site.email}</span>
-                      <span className="absolute -bottom-1 left-0 h-px w-full origin-right scale-x-100 bg-line transition-transform duration-500" />
-                      <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-flare transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />
-                    </a>
-                  </Magnetic>
+              <ContactForm />
+            </Reveal>
+
+            {/* secondary route — for people who'd rather use their own inbox */}
+            <Reveal delay={0.25}>
+              <div className="mt-8 border-t border-line pt-7">
+                <span className="label">Or email us directly</span>
+
+                <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-4">
+                  <span className="text-[clamp(1.05rem,2.2vw,1.45rem)] font-medium tracking-[-0.03em]">
+                    {site.email}
+                  </span>
 
                   <button
                     onClick={copy}
-                    className="relative flex items-center gap-2 rounded-full border border-line px-4 py-2 text-[12.5px] text-mute transition-colors hover:border-flare hover:text-flare"
+                    className="rounded-full border border-line px-4 py-1.5 text-[12.5px] text-mute transition-colors hover:border-flare hover:text-flare"
                   >
                     <motion.span
                       key={copied ? "y" : "n"}
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.25 }}
+                      className="block"
                     >
-                      {copied ? "Copied" : "Copy address"}
+                      {copied ? "Copied" : "Copy"}
                     </motion.span>
                   </button>
+
+                  <ArrowButton href={mailto()} variant="ghost" className="!py-3">
+                    Open in your email app
+                  </ArrowButton>
                 </div>
               </div>
-            </Reveal>
-
-            <Reveal delay={0.25}>
-              <ContactForm />
             </Reveal>
           </div>
 

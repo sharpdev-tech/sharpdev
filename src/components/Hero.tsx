@@ -68,7 +68,7 @@ export default function Hero() {
       {/* ---------- content ---------- */}
       <motion.div
         style={{ y: textY, opacity: textOpacity }}
-        className="shell relative z-10 flex min-h-[100svh] flex-col justify-between pb-10 pt-[calc(var(--nav-h)+7vh)]"
+        className="shell relative z-10 flex min-h-[100svh] flex-col justify-between gap-8 pb-10 pt-[calc(var(--nav-h)+4vh)] [@media(min-height:800px)]:pt-[calc(var(--nav-h)+7vh)]"
       >
         <div>
           <motion.div
@@ -83,7 +83,9 @@ export default function Hero() {
             <span className="hidden sm:inline">Available for new projects</span>
           </motion.div>
 
-          <h1 className="display max-w-[15ch] text-[clamp(3rem,10.5vw,10.5rem)]">
+          {/* Sized off height as well as width — on wide but short screens a
+              width-only clamp pushes the buttons below the fold. */}
+          <h1 className="display max-w-[15ch] text-[clamp(3rem,min(10.5vw,13vh),10.5rem)]">
             {["Websites", "worth the"].map((t, i) => (
               <span key={t} className="block overflow-hidden pb-[0.06em]">
                 <motion.span
@@ -138,7 +140,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.1, duration: 1 }}
-          className="mt-12 hidden items-center gap-3 lg:flex"
+          className="mt-2 hidden items-center gap-3 [@media(min-height:860px)]:lg:flex"
         >
           <span className="label">Scroll</span>
           <div className="h-10 w-px overflow-hidden bg-line">

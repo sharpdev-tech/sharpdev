@@ -88,18 +88,22 @@ export default function Preloader() {
           <div className="relative flex flex-1 flex-col items-center justify-center gap-7">
             <span className="block overflow-hidden pb-[0.08em]">
               <motion.span
-                className="display block text-[clamp(2.5rem,9vw,7rem)] leading-[0.9]"
+                className="display relative block text-[clamp(2.5rem,9vw,7rem)] leading-[0.9]"
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
                 transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                  backgroundImage: `linear-gradient(to top, var(--color-bone) ${count}%, rgba(237,241,243,0.18) ${count}%)`,
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  color: "transparent",
-                }}
               >
-                SharpDev
+                {/* the not-yet-loaded portion */}
+                <span className="block text-bone/[0.14]">SharpDev</span>
+
+                {/* brushed metal from the logo mark, revealed bottom-up as it loads */}
+                <span
+                  aria-hidden="true"
+                  className="chrome absolute inset-0 block transition-[clip-path] duration-300 ease-out"
+                  style={{ clipPath: `inset(${100 - count}% 0 0 0)` }}
+                >
+                  SharpDev
+                </span>
               </motion.span>
             </span>
 
