@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { mailto, nav, site } from "@/lib/site";
+import { nav, site } from "@/lib/site";
 import { LogoMark } from "./ui/Logo";
 
 const ICONS: Record<string, string> = {
@@ -31,7 +31,7 @@ export default function Footer() {
               and never publish anything you haven&apos;t approved.
             </p>
             <a
-              href={mailto()}
+              href="#contact"
               className="group mt-7 inline-flex items-center gap-2 text-[1.05rem] tracking-[-0.02em] text-bone"
             >
               <span className="border-b border-line pb-0.5 transition-colors group-hover:border-flare group-hover:text-flare">

@@ -65,7 +65,7 @@ export default function Faq() {
               <p className="mt-7 max-w-[34ch] text-[0.97rem] leading-[1.65] text-mute">
                 Still unsure about something? Ask directly —{" "}
                 <a
-                  href={`mailto:${site.email}`}
+                  href="#contact"
                   className="text-bone underline decoration-flare decoration-1 underline-offset-4 transition-colors hover:text-flare"
                 >
                   {site.email}

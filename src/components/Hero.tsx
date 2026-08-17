@@ -3,7 +3,6 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { ArrowButton } from "./ui/Magnetic";
-import { mailto } from "@/lib/site";
 
 const line = {
   hidden: { y: "115%" },
@@ -129,7 +128,7 @@ export default function Hero() {
             transition={{ delay: 1.7, duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-wrap items-center gap-3"
           >
-            <ArrowButton href={mailto()}>Start a project</ArrowButton>
+            <ArrowButton href="#contact">Start a project</ArrowButton>
             <ArrowButton href="#process" variant="ghost">
               See how it works
             </ArrowButton>

@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useState } from "react";
-import { mailto, nav, site } from "@/lib/site";
+import { nav, site } from "@/lib/site";
 import { LogoMark, Wordmark } from "./ui/Logo";
 
 export default function Nav() {
@@ -52,7 +52,7 @@ export default function Nav() {
 
             <div className="flex items-center gap-3">
               <a
-                href={mailto()}
+                href="#contact"
                 className="hidden rounded-full border border-line px-5 py-2.5 text-[13px] tracking-tight transition-colors hover:border-flare hover:text-flare sm:inline-block"
               >
                 {site.email}
@@ -103,7 +103,7 @@ export default function Nav() {
               ))}
             </div>
             <a
-              href={mailto()}
+              href="#contact"
               className="mt-12 text-[15px] text-flare"
               onClick={() => setOpen(false)}
             >

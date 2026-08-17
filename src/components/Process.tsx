@@ -5,7 +5,7 @@ import { useRef } from "react";
 import FigmaFrame from "./FigmaFrame";
 import { MaskLines, Reveal, SectionLabel, WordFade } from "./ui/Reveal";
 import { ArrowButton } from "./ui/Magnetic";
-import { mailto, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 const STEPS = [
   {
@@ -141,9 +141,7 @@ export default function Process() {
                     you&apos;ll have a new version to look at.
                   </p>
                   <div className="mt-6">
-                    <ArrowButton href={mailto("Design preview request")}>
-                      Ask for a preview
-                    </ArrowButton>
+                    <ArrowButton href="#contact">Ask for a preview</ArrowButton>
                   </div>
                 </div>
               </Reveal>
