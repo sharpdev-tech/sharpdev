@@ -3,8 +3,9 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { MaskLines, Reveal, SectionLabel } from "./ui/Reveal";
-import { ArrowButton, Magnetic } from "./ui/Magnetic";
+import { Magnetic } from "./ui/Magnetic";
 import { mailto, site } from "@/lib/site";
+import ContactForm from "./ContactForm";
 
 const CHECKLIST = [
   "What your business does",
@@ -53,7 +54,7 @@ export default function Contact() {
 
             <Reveal delay={0.15}>
               <p className="mt-8 max-w-[48ch] text-[1.05rem] leading-[1.65] text-mute">
-                No forms, no sales calls, no pressure. Tell us what you need and
+                No sales calls, no pressure. Tell us what you need and
                 you&apos;ll have a reply within 24 hours — with an honest
                 opinion, a fixed price and a date.
               </p>
@@ -93,15 +94,7 @@ export default function Contact() {
             </Reveal>
 
             <Reveal delay={0.25}>
-              <div className="mt-10 flex flex-wrap items-center gap-3">
-                <ArrowButton href={mailto()}>Send an email</ArrowButton>
-                <ArrowButton
-                  href={mailto("I'd like to see a design preview")}
-                  variant="ghost"
-                >
-                  Request a design preview
-                </ArrowButton>
-              </div>
+              <ContactForm />
             </Reveal>
           </div>
 
@@ -110,7 +103,7 @@ export default function Contact() {
             <Reveal delay={0.1}>
               <div className="rounded-2xl border border-line bg-ink-2/80 p-7 backdrop-blur-sm lg:p-8">
                 <h3 className="text-[1.1rem] font-medium tracking-[-0.03em]">
-                  What to put in the email
+                  What to tell us
                 </h3>
                 <p className="mt-2 text-[0.9rem] leading-snug text-mute">
                   Four lines is plenty.
