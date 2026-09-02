@@ -3,6 +3,48 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { ArrowButton } from "./ui/Magnetic";
+import type { Lang } from "@/lib/lang";
+import { useCopy } from "./LangProvider";
+
+const COPY: Record<
+  Lang,
+  {
+    badge: string;
+    available: string;
+    lines: [string, string];
+    accent: string;
+    lead: string;
+    leadStrong: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+    scroll: string;
+  }
+> = {
+  en: {
+    badge: "Web design & development studio",
+    available: "Available for new projects",
+    lines: ["Websites", "worth the"],
+    accent: "scroll",
+    lead: "We design and build fast, beautiful websites — from SaaS platforms to storefronts and 3D experiences.",
+    leadStrong:
+      "You see the finished design in Figma before a single line goes live.",
+    ctaPrimary: "Start a project",
+    ctaSecondary: "See how it works",
+    scroll: "Scroll",
+  },
+  sq: {
+    badge: "Studio dizajni dhe zhvillimi faqesh",
+    available: "I hapur për projekte të reja",
+    lines: ["Faqe që", "ia vlen t'i"],
+    accent: "shohësh",
+    lead: "Dizajnojmë dhe ndërtojmë faqe të shpejta e të bukura — nga platforma SaaS te dyqanet online dhe përvojat 3D.",
+    leadStrong:
+      "Dizajnin e përfunduar e shihni në Figma para se të publikohet asnjë rresht.",
+    ctaPrimary: "Nis një projekt",
+    ctaSecondary: "Shih si punojmë",
+    scroll: "Lëviz poshtë",
+  },
+};
 
 const line = {
   hidden: { y: "115%" },
@@ -13,6 +55,7 @@ const line = {
 };
 
 export default function Hero() {
+  const t = useCopy(COPY);
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -77,16 +120,16 @@ export default function Hero() {
             className="label mb-8 flex flex-wrap items-center gap-3"
           >
             <span className="rounded-full border border-line px-3 py-1.5">
-              Web design &amp; development studio
+              {t.badge}
             </span>
-            <span className="hidden sm:inline">Available for new projects</span>
+            <span className="hidden sm:inline">{t.available}</span>
           </motion.div>
 
           {/* Sized off height as well as width — on wide but short screens a
               width-only clamp pushes the buttons below the fold. */}
           <h1 className="display max-w-[15ch] text-[clamp(3rem,min(10.5vw,13vh),10.5rem)]">
-            {["Websites", "worth the"].map((t, i) => (
-              <span key={t} className="block overflow-hidden pb-[0.06em]">
+            {t.lines.map((text, i) => (
+              <span key={text} className="block overflow-hidden pb-[0.06em]">
                 <motion.span
                   className="block"
                   variants={line}
@@ -94,13 +137,13 @@ export default function Hero() {
                   animate="show"
                   custom={i}
                 >
-                  {t}
+                  {text}
                 </motion.span>
               </span>
             ))}
             <span className="block overflow-hidden pb-[0.06em]">
               <motion.span className="block" variants={line} initial="hidden" animate="show" custom={2}>
-                <span className="serif-accent text-flare">scroll</span>
+                <span className="serif-accent text-flare">{t.accent}</span>
                 <span className="text-mute">.</span>
               </motion.span>
             </span>
@@ -114,12 +157,8 @@ export default function Hero() {
             transition={{ delay: 1.55, duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-[46ch] text-[clamp(1rem,1.35vw,1.2rem)] leading-[1.55] text-mute"
           >
-            We design and build fast, beautiful websites — from SaaS platforms
-            to storefronts and 3D experiences.{" "}
-            <span className="text-bone">
-              You see the finished design in Figma before a single line goes
-              live.
-            </span>
+            {t.lead}{" "}
+            <span className="text-bone">{t.leadStrong}</span>
           </motion.p>
 
           <motion.div
@@ -128,9 +167,9 @@ export default function Hero() {
             transition={{ delay: 1.7, duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-wrap items-center gap-3"
           >
-            <ArrowButton href="#contact">Start a project</ArrowButton>
+            <ArrowButton href="#contact">{t.ctaPrimary}</ArrowButton>
             <ArrowButton href="#process" variant="ghost">
-              See how it works
+              {t.ctaSecondary}
             </ArrowButton>
           </motion.div>
         </div>
@@ -141,7 +180,7 @@ export default function Hero() {
           transition={{ delay: 2.1, duration: 1 }}
           className="mt-2 hidden items-center gap-3 [@media(min-height:860px)]:lg:flex"
         >
-          <span className="label">Scroll</span>
+          <span className="label">{t.scroll}</span>
           <div className="h-10 w-px overflow-hidden bg-line">
             <motion.div
               className="h-4 w-px bg-flare"

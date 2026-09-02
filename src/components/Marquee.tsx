@@ -10,19 +10,34 @@ import {
   useVelocity,
 } from "motion/react";
 import { useRef } from "react";
+import type { Lang } from "@/lib/lang";
+import { useCopy } from "./LangProvider";
 
-const ITEMS = [
-  "SaaS platforms",
-  "E-commerce",
-  "3D & WebGL",
-  "Cinematic sites",
-  "Brand & portfolio",
-  "Landing pages",
-  "Web apps",
-  "Redesigns",
-];
+const COPY: Record<Lang, string[]> = {
+  en: [
+    "SaaS platforms",
+    "E-commerce",
+    "3D & WebGL",
+    "Cinematic sites",
+    "Brand & portfolio",
+    "Landing pages",
+    "Web apps",
+    "Redesigns",
+  ],
+  sq: [
+    "Platforma SaaS",
+    "Dyqane online",
+    "3D & WebGL",
+    "Faqe kinematike",
+    "Brand & portofol",
+    "Faqe pritëse",
+    "Aplikacione web",
+    "Ridizajnime",
+  ],
+};
 
 export default function Marquee() {
+  const ITEMS = useCopy(COPY);
   const baseX = useMotionValue(0);
   const { scrollY } = useScroll();
   const velocity = useVelocity(scrollY);

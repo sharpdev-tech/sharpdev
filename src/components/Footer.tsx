@@ -3,6 +3,60 @@
 import { motion } from "motion/react";
 import { nav, site } from "@/lib/site";
 import { LogoMark } from "./ui/Logo";
+import type { Lang } from "@/lib/lang";
+import { useCopy } from "./LangProvider";
+
+const COPY: Record<
+  Lang,
+  {
+    blurb: string;
+    sections: string;
+    contact: string;
+    follow: string;
+    rights: string;
+    allRights: string;
+    built: string;
+    backToTop: string;
+    labels: Record<string, string>;
+  }
+> = {
+  en: {
+    blurb:
+      "A design-led web studio. We design in Figma, build with Next.js, and never publish anything you haven't approved.",
+    sections: "Sections",
+    contact: "Contact",
+    follow: "Follow / message",
+    rights: "SharpDev.",
+    allRights: " All rights reserved.",
+    built: "Designed in Figma · Built with Next.js",
+    backToTop: "Back to top",
+    labels: {
+      "#work": "Work",
+      "#services": "Services",
+      "#process": "Process",
+      "#stack": "Stack",
+      "#faq": "FAQ",
+    },
+  },
+  sq: {
+    blurb:
+      "Një studio web e udhëhequr nga dizajni. Dizajnojmë në Figma, ndërtojmë me Next.js dhe nuk publikojmë kurrë asgjë që nuk e keni miratuar.",
+    sections: "Seksionet",
+    contact: "Kontakt",
+    follow: "Na ndiqni / shkruani",
+    rights: "SharpDev.",
+    allRights: " Të gjitha të drejtat e rezervuara.",
+    built: "Dizajnuar në Figma · Ndërtuar me Next.js",
+    backToTop: "Kthehu lart",
+    labels: {
+      "#work": "Puna",
+      "#services": "Shërbimet",
+      "#process": "Procesi",
+      "#stack": "Teknologjia",
+      "#faq": "Pyetje",
+    },
+  },
+};
 
 const ICONS: Record<string, string> = {
   Instagram:
@@ -14,6 +68,8 @@ const ICONS: Record<string, string> = {
 };
 
 export default function Footer() {
+  const t = useCopy(COPY);
+
   return (
     <footer className="relative overflow-hidden border-t border-line bg-ink-2">
       <div className="shell py-16 lg:py-20">
@@ -27,8 +83,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="mt-6 max-w-[36ch] text-[0.95rem] leading-[1.65] text-mute">
-              A design-led web studio. We design in Figma, build with Next.js,
-              and never publish anything you haven&apos;t approved.
+              {t.blurb}
             </p>
             <a
               href="#contact"
@@ -43,7 +98,7 @@ export default function Footer() {
           {/* nav + socials — side by side at every width */}
           <div className="grid grid-cols-2 gap-6 sm:gap-10 lg:col-span-6 lg:col-start-7">
           <div>
-            <span className="label">Sections</span>
+            <span className="label">{t.sections}</span>
             <ul className="mt-5 space-y-3">
               {nav.map((n) => (
                 <li key={n.href}>
@@ -52,7 +107,7 @@ export default function Footer() {
                     className="group inline-flex items-center gap-2 text-[0.95rem] text-mute transition-colors hover:text-bone"
                   >
                     <span className="h-px w-0 bg-flare transition-all duration-400 group-hover:w-4" />
-                    {n.label}
+                    {t.labels[n.href] ?? n.label}
                   </a>
                 </li>
               ))}
@@ -62,7 +117,7 @@ export default function Footer() {
                   className="group inline-flex items-center gap-2 text-[0.95rem] text-mute transition-colors hover:text-bone"
                 >
                   <span className="h-px w-0 bg-flare transition-all duration-400 group-hover:w-4" />
-                  Contact
+                  {t.contact}
                 </a>
               </li>
             </ul>
@@ -70,7 +125,7 @@ export default function Footer() {
 
           {/* socials */}
           <div>
-            <span className="label">Follow / message</span>
+            <span className="label">{t.follow}</span>
             <ul className="mt-5 space-y-3">
               {site.socials.map((s) => (
                 <li key={s.name}>
@@ -120,17 +175,17 @@ export default function Footer() {
         {/* bottom bar */}
         <div className="mt-12 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-line pt-7">
           <p className="order-1 text-[0.82rem] text-mute">
-            © {new Date().getFullYear()} SharpDev.
-            <span className="hidden sm:inline"> All rights reserved.</span>
+            © {new Date().getFullYear()} {t.rights}
+            <span className="hidden sm:inline">{t.allRights}</span>
           </p>
           <p className="order-3 w-full text-[0.82rem] text-mute sm:order-2 sm:w-auto">
-            Designed in Figma · Built with Next.js
+            {t.built}
           </p>
           <a
             href="#top"
             className="group order-2 inline-flex items-center gap-2 text-[0.82rem] text-mute transition-colors hover:text-flare sm:order-3"
           >
-            Back to top
+            {t.backToTop}
             <svg viewBox="0 0 12 12" className="h-3 w-3 transition-transform duration-400 group-hover:-translate-y-1">
               <path
                 d="M6 10V2M2.5 5.5L6 2l3.5 3.5"

@@ -3,6 +3,8 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { MaskLines, SectionLabel, WordFade } from "./ui/Reveal";
+import type { Lang } from "@/lib/lang";
+import { useCopy } from "./LangProvider";
 
 type Card = {
   n: string;
@@ -13,72 +15,152 @@ type Card = {
   accent: string;
 };
 
-const CARDS: Card[] = [
-  {
-    n: "01",
-    kind: "SaaS platform",
-    title: "Explain the product in one screen",
-    body: "A marketing site built around a single question: what does this do for me? Short sections, one clear action, pricing you can read without a call.",
-    metrics: [
-      { k: "Build", v: "3 weeks" },
-      { k: "Pages", v: "7" },
-      { k: "Load", v: "< 1s" },
-    ],
-    accent: "from-[#2bc8de]/25",
-  },
-  {
-    n: "02",
-    kind: "E-commerce",
-    title: "A storefront that behaves on mobile",
-    body: "Fast product pages, honest photography, and a checkout with nothing in the way. Stock, prices and collections stay editable by the owner.",
-    metrics: [
-      { k: "Build", v: "4 weeks" },
-      { k: "Products", v: "120+" },
-      { k: "Self-managed", v: "Yes" },
-    ],
-    accent: "from-[#7fd9e8]/25",
-  },
-  {
-    n: "03",
-    kind: "3D & WebGL",
-    title: "Turn the product, change the colour",
-    body: "A real-time 3D viewer running in the browser. Drag to rotate, pick a finish, see the price update — smooth on a three-year-old phone.",
-    metrics: [
-      { k: "Build", v: "5 weeks" },
-      { k: "Frame rate", v: "60fps" },
-      { k: "App needed", v: "None" },
-    ],
-    accent: "from-[#6ba8ff]/20",
-  },
-  {
-    n: "04",
-    kind: "Cinematic",
-    title: "A story told by scrolling",
-    body: "Full-bleed film, type that arrives on cue, and pacing that holds attention to the last frame. Motion used to guide the eye, never to show off.",
-    metrics: [
-      { k: "Build", v: "4 weeks" },
-      { k: "Scenes", v: "6" },
-      { k: "Sound", v: "Optional" },
-    ],
-    accent: "from-[#c58bff]/20",
-  },
+const ACCENTS = [
+  "from-[#2bc8de]/25",
+  "from-[#7fd9e8]/25",
+  "from-[#6ba8ff]/20",
+  "from-[#c58bff]/20",
 ];
 
+const COPY: Record<
+  Lang,
+  {
+    label: string;
+    lines: [string, string];
+    accent: string;
+    intro: string;
+    footnote: string;
+    cards: Omit<Card, "accent">[];
+  }
+> = {
+  en: {
+    label: "Selected work",
+    lines: ["The kind of work", "we"],
+    accent: "ship",
+    intro:
+      "Four builds, four different problems. Scroll through to see how we think about layout, speed and the one action every page should lead to.",
+    footnote: "Designed in Figma — built with Next.js",
+    cards: [
+      {
+        n: "01",
+        kind: "SaaS platform",
+        title: "Explain the product in one screen",
+        body: "A marketing site built around a single question: what does this do for me? Short sections, one clear action, pricing you can read without a call.",
+        metrics: [
+          { k: "Build", v: "3 weeks" },
+          { k: "Pages", v: "7" },
+          { k: "Load", v: "< 1s" },
+        ],
+      },
+      {
+        n: "02",
+        kind: "E-commerce",
+        title: "A storefront that behaves on mobile",
+        body: "Fast product pages, honest photography, and a checkout with nothing in the way. Stock, prices and collections stay editable by the owner.",
+        metrics: [
+          { k: "Build", v: "4 weeks" },
+          { k: "Products", v: "120+" },
+          { k: "Self-managed", v: "Yes" },
+        ],
+      },
+      {
+        n: "03",
+        kind: "3D & WebGL",
+        title: "Turn the product, change the colour",
+        body: "A real-time 3D viewer running in the browser. Drag to rotate, pick a finish, see the price update — smooth on a three-year-old phone.",
+        metrics: [
+          { k: "Build", v: "5 weeks" },
+          { k: "Frame rate", v: "60fps" },
+          { k: "App needed", v: "None" },
+        ],
+      },
+      {
+        n: "04",
+        kind: "Cinematic",
+        title: "A story told by scrolling",
+        body: "Full-bleed film, type that arrives on cue, and pacing that holds attention to the last frame. Motion used to guide the eye, never to show off.",
+        metrics: [
+          { k: "Build", v: "4 weeks" },
+          { k: "Scenes", v: "6" },
+          { k: "Sound", v: "Optional" },
+        ],
+      },
+    ],
+  },
+  sq: {
+    label: "Punë e zgjedhur",
+    lines: ["Lloji i punës", "që"],
+    accent: "dorëzojmë",
+    intro:
+      "Katër ndërtime, katër probleme të ndryshme. Shfletoni për të parë si mendojmë për strukturën, shpejtësinë dhe veprimin e vetëm te i cili duhet të çojë çdo faqe.",
+    footnote: "Dizajnuar në Figma — ndërtuar me Next.js",
+    cards: [
+      {
+        n: "01",
+        kind: "Platformë SaaS",
+        title: "Shpjego produktin në një ekran",
+        body: "Një faqe ndërtuar rreth një pyetjeje të vetme: çfarë bën kjo për mua? Seksione të shkurtra, një veprim i qartë, çmime që lexohen pa pasur nevojë për takim.",
+        metrics: [
+          { k: "Ndërtimi", v: "3 javë" },
+          { k: "Faqe", v: "7" },
+          { k: "Ngarkimi", v: "< 1s" },
+        ],
+      },
+      {
+        n: "02",
+        kind: "Dyqan online",
+        title: "Një dyqan që sillet mirë në telefon",
+        body: "Faqe produkti të shpejta, fotografi të ndershme dhe një arkë pa pengesa. Stoku, çmimet dhe koleksionet mbeten të ndryshueshme nga pronari.",
+        metrics: [
+          { k: "Ndërtimi", v: "4 javë" },
+          { k: "Produkte", v: "120+" },
+          { k: "Vetëmenaxhim", v: "Po" },
+        ],
+      },
+      {
+        n: "03",
+        kind: "3D & WebGL",
+        title: "Rrotullo produktin, ndrysho ngjyrën",
+        body: "Një shikues 3D në kohë reale brenda shfletuesit. Rrotulloni me gisht, zgjidhni një finiturë, shihni çmimin të përditësohet — pa bllokime edhe në një telefon trevjeçar.",
+        metrics: [
+          { k: "Ndërtimi", v: "5 javë" },
+          { k: "Kuadro", v: "60fps" },
+          { k: "Aplikacion", v: "Asnjë" },
+        ],
+      },
+      {
+        n: "04",
+        kind: "Kinematike",
+        title: "Një histori e treguar me lëvizje",
+        body: "Film në tërë ekranin, tekst që shfaqet në momentin e duhur dhe ritëm që e mban vëmendjen deri në fund. Lëvizja udhëheq syrin, nuk shfaqet për vete.",
+        metrics: [
+          { k: "Ndërtimi", v: "4 javë" },
+          { k: "Skena", v: "6" },
+          { k: "Zë", v: "Opsional" },
+        ],
+      },
+    ],
+  },
+};
+
 export default function Work() {
+  const t = useCopy(COPY);
   const ref = useRef<HTMLDivElement>(null);
+  const cards: Card[] = t.cards.map((c, i) => ({ ...c, accent: ACCENTS[i] }));
 
   return (
     <section id="work" className="relative border-t border-line py-[clamp(5rem,12vw,10rem)]">
       <div className="shell">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-6">
-            <SectionLabel index="01">Selected concepts</SectionLabel>
+            <SectionLabel index="01">{t.label}</SectionLabel>
             <MaskLines
               className="display mt-7 text-[clamp(2.4rem,5.4vw,4.6rem)]"
               lines={[
-                <>The kind of work</>,
+                <>{t.lines[0]}</>,
                 <>
-                  we <span className="serif-accent text-flare">ship</span>.
+                  {t.lines[1]}{" "}
+                  <span className="serif-accent text-flare">{t.accent}</span>.
                 </>,
               ]}
             />
@@ -86,15 +168,15 @@ export default function Work() {
           <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
             <WordFade
               className="max-w-[44ch] text-[1.02rem] leading-[1.6] text-mute"
-              text="Four builds, four different problems. Scroll through to see how we think about layout, speed and the one action every page should lead to."
+              text={t.intro}
             />
           </div>
         </div>
       </div>
 
       <div ref={ref} className="shell mt-16">
-        {CARDS.map((c, i) => (
-          <StickyCard key={c.n} card={c} index={i} total={CARDS.length} />
+        {cards.map((c, i) => (
+          <StickyCard key={c.n} card={c} index={i} total={cards.length} footnote={t.footnote} />
         ))}
       </div>
     </section>
@@ -105,10 +187,12 @@ function StickyCard({
   card,
   index,
   total,
+  footnote,
 }: {
   card: Card;
   index: number;
   total: number;
+  footnote: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -137,9 +221,6 @@ function StickyCard({
               <span className="text-flare">{card.n}</span>
               <span className="h-px w-6 bg-line" />
               <span>{card.kind}</span>
-              <span className="ml-auto rounded-full border border-line px-2 py-0.5 text-[10px] normal-case tracking-normal">
-                Concept
-              </span>
             </div>
 
             <h3 className="mt-6 max-w-[18ch] text-[clamp(1.7rem,3.4vw,2.8rem)] font-medium leading-[1.05] tracking-[-0.045em]">
@@ -171,7 +252,7 @@ function StickyCard({
           <span className="label">
             {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </span>
-          <span className="label">Designed in Figma — built with Next.js</span>
+          <span className="label">{footnote}</span>
         </div>
       </motion.article>
     </div>
