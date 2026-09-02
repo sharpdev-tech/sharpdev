@@ -42,3 +42,4 @@ next-env.d.ts
 
 # original logo export (generated assets are committed instead)
 /logo-source.png
+/favicon-source.png
