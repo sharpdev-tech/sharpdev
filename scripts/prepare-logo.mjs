@@ -14,10 +14,9 @@
  * well under the 3:1 a graphic needs, so it would all but disappear in the nav.
  * The accent colour is left alone.
  *
- * A favicon source that already carries its own tile (mostly opaque) is used
- * as-is. One that is mostly transparent gets an opaque cream tile: a dark mark
- * on transparency vanishes against dark browser chrome, and iOS fills
- * transparency with black on the home screen.
+ * The browser favicons keep the source's own transparency. The Apple touch
+ * icon does not: iOS composites transparency onto black, which would swallow
+ * the dark half of the mark, so that one alone gets an opaque bone tile.
  *
  * NOTE: the sources are raster files, so every placement below is generated at
  * 2x the size it is displayed at. Replace this pipeline with an SVG master when
@@ -52,8 +51,6 @@ const INK = { r: 6, g: 7, b: 10 };
 const BONE = { r: 237, g: 241, b: 243 };
 /** Below this share of transparent pixels a source counts as flat-background. */
 const ALPHA_THRESHOLD = 0.02;
-/** Above this share of opaque pixels a favicon source has its own tile. */
-const OWN_TILE_THRESHOLD = 0.5;
 /** Relative luminance under which a pixel is unreadable on INK. */
 const TOO_DARK = 0.25;
 
@@ -197,14 +194,13 @@ const { buffer: siteMark, lifted } = await liftForDarkGround(logo.buffer);
 // The mark, transparent, lifted so it reads on the dark site.
 await square(siteMark, 512, "public/logo.png");
 
-// The favicon keeps its own tile if it has one, otherwise gets a bone tile.
-const hasOwnTile = 1 - icon.transparentShare > OWN_TILE_THRESHOLD;
-const iconGround = hasOwnTile ? transparent : { ...BONE, alpha: 1 };
+// Browser favicons keep the source's transparency.
+await square(icon.buffer, 512, "src/app/icon.png");
+await square(icon.buffer, 32, "src/app/icon1.png");
+await square(icon.buffer, 16, "src/app/icon2.png");
 
-await square(icon.buffer, 512, "src/app/icon.png", iconGround);
-await square(icon.buffer, 32, "src/app/icon1.png", iconGround);
-await square(icon.buffer, 16, "src/app/icon2.png", iconGround);
-await square(icon.buffer, 180, "src/app/apple-icon.png", iconGround);
+// iOS paints transparency black, which would hide the dark half of the mark.
+await square(icon.buffer, 180, "src/app/apple-icon.png", { ...BONE, alpha: 1 });
 
 // OG / Twitter card: the mark centred on the brand background.
 const ogMark = await sharp(siteMark)
@@ -222,7 +218,7 @@ console.log(`
   Logo     ${logo.width}x${logo.height}  (${logo.note})
            ${lifted.toLocaleString()} px lifted to bone for the dark background
   Favicon  ${icon.width}x${icon.height}  (${icon.note})
-           ${hasOwnTile ? "kept its own tile" : "given a bone tile"}
+           transparent — except the Apple icon, which gets a bone tile
   Clear space ${PADDING * 100}% inside each square icon
 
   wrote  public/logo.png         512px
