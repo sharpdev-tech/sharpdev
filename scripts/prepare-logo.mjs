@@ -3,12 +3,7 @@
  *
  *   node scripts/prepare-logo.mjs [logo-source] [favicon-source]
  *
- * Defaults to logo-source.png and favicon-source.svg in the project root.
- *
- * A vector favicon source is copied through to src/app/icon.svg untouched, so
- * modern browsers get a mark that stays crisp at any size. The 32 and 16px PNGs
- * are rasterised from the same file as a fallback for browsers without SVG
- * favicon support.
+ * Defaults to logo-source.png and favicon-source.png in the project root.
  *
  * Two sources, because the mark sits on two different grounds:
  *   logo-source.png     for the site's near-black background
@@ -31,20 +26,20 @@
  * Writes:
  *   public/logo.png             512px  — nav + footer mark (displayed at ~36px)
  *   public/logo-og.png         1200x630 — OG / Twitter card
- *   src/app/icon.svg                   — favicon (vector, any size)
+ *   src/app/icon.png            512px  — favicon (large)
  *   src/app/icon1.png            32px  — favicon
  *   src/app/icon2.png            16px  — favicon
  *   src/app/apple-icon.png      180px  — iOS home screen
  */
 
 import sharp from "sharp";
-import { copyFileSync, existsSync, rmSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const logoInput = resolve(root, process.argv[2] ?? "logo-source.png");
-const iconInput = resolve(root, process.argv[3] ?? "favicon-source.svg");
+const iconInput = resolve(root, process.argv[3] ?? "favicon-source.png");
 
 /** How far a pixel may stray from the sampled background and still count. */
 const TOLERANCE = 34;
@@ -177,8 +172,8 @@ async function liftForDarkGround(buffer) {
 const transparent = { r: 0, g: 0, b: 0, alpha: 0 };
 
 /** Square icon with the mark inset by PADDING, on an optional solid ground. */
-async function square(base, size, file, background = transparent, padding = PADDING) {
-  const inner = Math.round(size * (1 - padding * 2));
+async function square(base, size, file, background = transparent) {
+  const inner = Math.round(size * (1 - PADDING * 2));
   const mark = await sharp(base)
     .resize(inner, inner, { fit: "contain", background: transparent })
     .toBuffer();
@@ -192,41 +187,20 @@ async function square(base, size, file, background = transparent, padding = PADD
 }
 
 const logo = await flatten(logoInput);
-
-const iconIsVector = iconInput.toLowerCase().endsWith(".svg");
-// Rasterise vectors generously so the small PNGs downsample from real detail.
-const iconRaster = iconIsVector
-  ? await sharp(iconInput, { density: 600 }).resize(1024, 1024, { fit: "contain", background: transparent }).png().toBuffer()
-  : null;
-const icon = iconIsVector
-  ? { buffer: iconRaster, width: 1024, height: 1024, transparentShare: 0, note: "vector source" }
-  : await flatten(iconInput);
+const icon = await flatten(iconInput);
 
 const { buffer: siteMark, lifted } = await liftForDarkGround(logo.buffer);
 
 // The mark, transparent, lifted so it reads on the dark site.
 await square(siteMark, 512, "public/logo.png");
 
-// Browser favicons keep the source's transparency. A vector source is served
-// as-is; the PNGs remain for browsers that cannot use an SVG favicon.
-const iconPng = resolve(root, "src/app/icon.png");
-const iconSvg = resolve(root, "src/app/icon.svg");
-
-if (iconIsVector) {
-  copyFileSync(iconInput, iconSvg);
-  if (existsSync(iconPng)) rmSync(iconPng); // superseded by the vector
-} else {
-  if (existsSync(iconSvg)) rmSync(iconSvg);
-  await square(icon.buffer, 512, "src/app/icon.png");
-}
-
-// The square viewBox already carries the clear space, so no extra padding.
-const iconPad = iconIsVector ? 0 : PADDING;
-await square(icon.buffer, 32, "src/app/icon1.png", transparent, iconPad);
-await square(icon.buffer, 16, "src/app/icon2.png", transparent, iconPad);
+// Browser favicons keep the source's transparency.
+await square(icon.buffer, 512, "src/app/icon.png");
+await square(icon.buffer, 32, "src/app/icon1.png");
+await square(icon.buffer, 16, "src/app/icon2.png");
 
 // iOS paints transparency black, which would hide the dark half of the mark.
-await square(icon.buffer, 180, "src/app/apple-icon.png", { ...BONE, alpha: 1 }, iconPad);
+await square(icon.buffer, 180, "src/app/apple-icon.png", { ...BONE, alpha: 1 });
 
 // OG / Twitter card: the mark centred on the brand background.
 const ogMark = await sharp(siteMark)
@@ -249,7 +223,7 @@ console.log(`
 
   wrote  public/logo.png         512px
   wrote  public/logo-og.png      1200x630
-  wrote  src/app/${iconIsVector ? "icon.svg        vector" : "icon.png        512px "}
+  wrote  src/app/icon.png        512px
   wrote  src/app/icon1.png        32px
   wrote  src/app/icon2.png        16px
   wrote  src/app/apple-icon.png  180px
