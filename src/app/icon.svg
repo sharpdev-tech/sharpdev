@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="41.5 79.5 923 923">
+  <!--
+    SharpDev mark. The viewBox is a square centred on the artwork with 10%
+    clear space, so the icon needs no padding of its own. The background rect
+    from the original export is dropped: the favicon is transparent.
+  -->
+  <path
+    d="M 487 172 C 520 240 600 320 648 400 C 661 420 670 452 670 490 C 670 545 650 578 616 600 C 600 612 560 630 512 633 C 528 612 556 570 554 515 C 554 478 528 435 509 400 C 494 372 487 300 485 230 C 485 200 486 180 487 172 Z"
+    fill="#3CE2CE"
+  />
+  <path
+    d="M 487 172 C 520 240 600 320 648 400 C 661 420 670 452 670 490 C 670 545 650 578 616 600 C 600 612 560 630 512 633 C 528 612 556 570 554 515 C 554 478 528 435 509 400 C 494 372 487 300 485 230 C 485 200 486 180 487 172 Z"
+    fill="#081426"
+    transform="rotate(180 503 541)"
+  />
+</svg>
